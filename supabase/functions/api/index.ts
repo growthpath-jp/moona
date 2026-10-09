@@ -1,4 +1,4 @@
-// つきのしらせ API (Supabase Edge Function)
+// Moona API (Supabase Edge Function)
 // All data access goes through here with the service role; tables have RLS on and no policies.
 // Auth: each device holds a random token; only its SHA-256 hash is stored.
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
@@ -318,7 +318,7 @@ Deno.serve(async (req) => {
         return json({ ok: true });
       }
       case "test_push": {
-        const r = await pushTo(me.pair_id, { member: me.id }, "テスト通知", "つきのしらせ からの通知は、このように届きます。", "test");
+        const r = await pushTo(me.pair_id, { member: me.id }, "テスト通知", "Moona からの通知は、このように届きます。", "test");
         return json({ ok: true, result: r });
       }
       case "claim": {
@@ -436,7 +436,7 @@ Deno.serve(async (req) => {
         return json({ ok: true, state: await buildState(me) });
       }
       case "test_partner": {
-        const r = await pushTo(me.pair_id, "partner", "テスト通知", `${hon(me.name)}の「つきのしらせ」からのテスト通知です。`, "test_partner");
+        const r = await pushTo(me.pair_id, "partner", "テスト通知", `${hon(me.name)}の「Moona」からのテスト通知です。`, "test_partner");
         return json({ ok: true, result: r });
       }
       case "regen_invite": {
@@ -448,7 +448,7 @@ Deno.serve(async (req) => {
       case "approve_member": {
         const { data: m } = await sb.from("members").update({ status: "active" }).eq("id", String(body.id)).eq("pair_id", me.pair_id).eq("role", "partner").select("id,name").maybeSingle();
         if (!m) throw new ApiError("not_found", "対象のパートナーが見つかりません。");
-        await pushTo(me.pair_id, { member: m.id }, "参加が承認されました", `${hon(me.name)}の「つきのしらせ」に参加しました。`, "approved");
+        await pushTo(me.pair_id, { member: m.id }, "参加が承認されました", `${hon(me.name)}の「Moona」に参加しました。`, "approved");
         return json({ ok: true, state: await buildState(me) });
       }
       case "remove_member": {

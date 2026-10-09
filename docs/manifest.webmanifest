@@ -1,6 +1,6 @@
 {
-  "name": "つきのしらせ",
-  "short_name": "つきのしらせ",
+  "name": "Moona",
+  "short_name": "Moona",
   "description": "生理の記録と、パートナーへの通知",
   "lang": "ja",
   "start_url": "./",

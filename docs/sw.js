@@ -1,5 +1,5 @@
-// つきのしらせ service worker: receives remote push, shows notifications, caches the app shell.
-const CACHE = "tsuki-p1";
+// Moona service worker: receives remote push, shows notifications, caches the app shell.
+const CACHE = "moona-v1";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
@@ -27,8 +27,8 @@ self.addEventListener("fetch", (e) => {
 
 self.addEventListener("push", (e) => {
   let data = {};
-  try { data = e.data ? e.data.json() : {}; } catch (_) { data = { title: "つきのしらせ", body: e.data ? e.data.text() : "" }; }
-  const title = data.title || "つきのしらせ";
+  try { data = e.data ? e.data.json() : {}; } catch (_) { data = { title: "Moona", body: e.data ? e.data.text() : "" }; }
+  const title = data.title || "Moona";
   e.waitUntil(
     self.registration.showNotification(title, {
       body: data.body || "",

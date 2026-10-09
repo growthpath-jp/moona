@@ -1,4 +1,4 @@
--- つきのしらせ: database schema (all access goes through the Edge Function with the service role)
+-- Moona: database schema (all access goes through the Edge Function with the service role)
 create extension if not exists pg_net;
 create extension if not exists pg_cron;
 

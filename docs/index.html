@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>つきのしらせ</title>
+<title>Moona</title>
 <meta name="theme-color" content="#5cbab7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="つきのしらせ">
+<meta name="apple-mobile-web-app-title" content="Moona">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
@@ -145,7 +145,7 @@ p,.note,.small{text-wrap:pretty}
 <script>
 "use strict";
 const API = "https://vnhlauabwmxnlscvquju.supabase.co/functions/v1/api";
-const LS = "tsuki_token";
+const LS = "moona_token";
 
 /* ---------- utils ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -294,7 +294,7 @@ async function enablePush() {
     throw { message: "この端末・ブラウザは通知に対応していません。iPhoneはiOS 16.4以降が必要です。" };
   }
   const perm = await Notification.requestPermission();
-  if (perm !== "granted") throw { message: "通知が許可されませんでした。iPhoneの「設定」→「通知」→「つきのしらせ」で許可できます。" };
+  if (perm !== "granted") throw { message: "通知が許可されませんでした。iPhoneの「設定」→「通知」→「Moona」で許可できます。" };
   const reg = swReg || await registerSW() || await navigator.serviceWorker.ready;
   const { publicKey } = await api("vapid");
   let sub = await reg.pushManager.getSubscription();
@@ -343,7 +343,7 @@ function dayInfo(d) {
 
 /* ---------- render: setup ---------- */
 function renderInstall() {
-  $("#root").innerHTML = `<div class="setup"><h1>つきのしらせ</h1><p>生理の記録と、パートナーへの通知アプリ</p>
+  $("#root").innerHTML = `<div class="setup"><h1>Moona</h1><p>生理の記録と、パートナーへの通知アプリ</p>
   <div class="card" style="display:grid;gap:10px">
     <h2 style="margin:0">はじめに：ホーム画面に追加してください</h2>
     <p class="small" style="margin:0">iPhoneでは、ホーム画面に追加したアプリからでないと通知が届きません。</p>
@@ -351,7 +351,7 @@ function renderInstall() {
       <li>画面下の <b>共有ボタン</b>（四角から上向き矢印）を押す</li>
       <li><b>「ホーム画面に追加」</b>を選ぶ（見当たらなければ下へスクロール）</li>
       <li>右上の<b>「追加」</b>を押す</li>
-      <li>ホーム画面にできた <b>つきのしらせ</b> のアイコンから開く</li>
+      <li>ホーム画面にできた <b>Moona</b> のアイコンから開く</li>
     </ol>
     <p class="small muted" style="margin:0">登録はホーム画面のアプリで行ってください（Safariとアプリでは保存場所が別になります）。</p>
     <button class="btn sm" id="skipInstall">このまま使う（通知なし）</button>
@@ -359,7 +359,7 @@ function renderInstall() {
   $("#skipInstall").onclick = () => { S.skipInstall = true; boot(); };
 }
 function renderSetup() {
-  $("#root").innerHTML = `<div class="setup"><h1>つきのしらせ</h1><p>どちらで使いますか？</p>
+  $("#root").innerHTML = `<div class="setup"><h1>Moona</h1><p>どちらで使いますか？</p>
   <div style="display:grid;gap:12px">
     <form class="card" id="fOwner" style="display:grid;gap:10px">
       <h2 style="margin:0">生理を記録する人</h2>
@@ -524,7 +524,7 @@ function noticeRow(n) {
 async function pushCard(el) {
   const ps = await pushStatus();
   if (ps === "on") { el.innerHTML = ""; return; }
-  const msg = ps === "denied" ? "通知がブロックされています。iPhoneの「設定」→「通知」→「つきのしらせ」で許可してください。"
+  const msg = ps === "denied" ? "通知がブロックされています。iPhoneの「設定」→「通知」→「Moona」で許可してください。"
     : ps === "unsupported" ? (isIOS && !standalone() ? "ホーム画面に追加したアプリから開くと、通知を受け取れます。" : "この端末は通知に対応していません（iPhoneはiOS 16.4以降）。")
     : "この携帯の通知がオフです。";
   el.innerHTML = `<div class="note warn"><b>通知を受け取れません</b>${msg}${ps === "off" ? `<div style="margin-top:8px"><button class="btn coral sm" id="pcOn">通知をオンにする</button></div>` : ""}</div>`;
@@ -804,7 +804,7 @@ function viewSettingsOwner(v) {
   bindAccount(v);
   $("#xCsv").onclick = () => { const rows = [["開始日", "終了日", "日数", "前回からの周期"]]; s.periods.forEach((p, i) => rows.push([p.start_date, p.end_date || "", p.end_date ? diff(p.start_date, p.end_date) + 1 : "", i ? diff(s.periods[i - 1].start_date, p.start_date) : ""])); download("生理記録.csv", csv(rows), "text/csv"); };
   $("#xCsv2").onclick = () => { const rows = [["日付", "経血量", "症状", "気分", "その他", "メモ"]]; s.days.forEach(d => rows.push([d.date, d.flow || "", d.symptoms.join("・"), d.mood || "", (d.others || []).join("・"), d.memo || ""])); download("体調記録.csv", csv(rows), "text/csv"); };
-  $("#xJson").onclick = () => download(`つきのしらせ_${s.today}.json`, JSON.stringify({ app: "tsuki", version: 2, periods: s.periods.map(p => ({ start: p.start_date, end: p.end_date })), days: s.days, settings: s.settings }, null, 2), "application/json");
+  $("#xJson").onclick = () => download(`Moona_${s.today}.json`, JSON.stringify({ app: "tsuki", version: 2, periods: s.periods.map(p => ({ start: p.start_date, end: p.end_date })), days: s.days, settings: s.settings }, null, 2), "application/json");
   $("#imp").onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const o = JSON.parse(await f.text()); const periods = o.periods || Object.values(o.docs || {}).filter(x => x && x.kind === "period").map(x => ({ start: x.start, end: x.end })); const days = o.days || Object.values(o.docs || {}).filter(x => x && x.kind === "day"); const r = await api("import", { periods, days }); toast(r.imported + "件を復元しました"); render(); } catch (er) { toast("復元できませんでした：" + (er.message || "")); } e.target.value = ""; };
   $("#wipe").onclick = () => { $("#wipeOut").innerHTML = `<div class="note err"><b>すべての記録・設定・パートナーの登録を削除します</b>元に戻せません。<div class="row" style="margin-top:8px"><button class="btn sm danger" id="wGo">削除する</button><button class="btn sm" id="wNo">やめる</button></div></div>`;
     $("#wNo").onclick = () => $("#wipeOut").innerHTML = ""; $("#wGo").onclick = async () => { try { await api("delete_all"); setToken(null); S.state = null; boot(); } catch (er) { toast(er.message); } }; };

@@ -1,4 +1,4 @@
-/* Japanese phrase line-breaking for つきのしらせ.
+/* Japanese phrase line-breaking for Moona.
    Phrase model and algorithm from BudouX (https://github.com/google/budoux, v0.9.3, models/ja.json),
    Copyright 2021 Google LLC, Apache License 2.0. Ported to plain JavaScript. */
 (function () {
