@@ -1,0 +1,12 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# dependencies and build output
+node_modules/
+# local secrets (never commit): keys live only in Supabase public.app_secrets
+.env
+.env.*
+*.pem
+supabase/.temp/
